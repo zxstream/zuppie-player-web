@@ -1,0 +1,8 @@
+{
+    "arrowParens": "always",
+    "tabWidth": 4,
+    "useTabs": false,
+    "printWidth": 100,
+    "singleQuote": false,
+    "jsxSingleQuote": false
+}
