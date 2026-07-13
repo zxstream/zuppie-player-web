@@ -1,5 +1,7 @@
 import { usePlayer } from "../hooks";
 
+import styles from "./PlayerMedia.module.scss";
+
 type PlayerMediaProps = {
     source: string;
     poster?: string;
@@ -37,7 +39,7 @@ function PlayerMedia({ source, poster }: PlayerMediaProps) {
     }
 
     return (
-        <div className="">
+        <div className={styles["player-media__wrapper"]}>
             <video
                 ref={videoRef}
                 controls={false}

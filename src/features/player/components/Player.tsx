@@ -3,6 +3,8 @@ import { PlayerProvider } from "../context";
 import PlayerControls from "./PlayerControls";
 import PlayerMedia from "./PlayerMedia";
 
+import styles from "./Player.module.scss";
+
 type PlayerProperties = {
     source: string;
     poster?: string;
@@ -11,8 +13,10 @@ type PlayerProperties = {
 function Player({ source, poster }: PlayerProperties) {
     return (
         <PlayerProvider>
-            <PlayerMedia source={source} poster={poster} />
-            <PlayerControls />
+            <div className={styles["player__container"]}>
+                <PlayerMedia source={source} poster={poster} />
+                <PlayerControls />
+            </div>
         </PlayerProvider>
     );
 }

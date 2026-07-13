@@ -1,10 +1,14 @@
 import { usePlayer } from "../../hooks";
 
-function ButtonToggle() {
+type ButtonToggleProps = {
+    className?: string;
+};
+
+function ButtonToggle({ className }: ButtonToggleProps) {
     const { state, actions } = usePlayer();
 
     return (
-        <button type="button" onClick={actions.toggle}>
+        <button type="button" onClick={actions.toggle} className={`${className ?? ""}`}>
             {state.isPlaying ? "Pause" : "Play"}
         </button>
     );

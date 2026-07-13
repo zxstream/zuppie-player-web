@@ -1,0 +1,65 @@
+.timeline__wrapper {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+    height: 1em;
+
+    overflow: hidden;
+
+    &:hover .timeline__container {
+        height: 50%;
+    }
+
+    &:hover .timeline__container .timeline__thumb {
+        width: 1em;
+        height: 1em;
+    }
+
+    .timeline__container {
+        position: relative;
+
+        width: 100%;
+        height: 25%;
+
+        background: gray;
+
+        transition: 0.1s linear;
+
+        .timeline__progress {
+            position: absolute;
+
+            inset: 0 auto 0 0;
+
+            width: var(--player-progress, 0);
+            height: 100%;
+
+            background-color: crimson;
+
+            transition: width 0.1s ease;
+        }
+
+        .timeline__thumb {
+            position: absolute;
+
+            top: 50%;
+            left: var(--player-progress, 0);
+
+            width: 0.75em;
+            height: 0.75em;
+
+            border-radius: 50%;
+
+            background-color: crimson;
+
+            transform: translate(-50%, -50%);
+
+            transition:
+                width,
+                height,
+                left 0.1s ease;
+        }
+    }
+}

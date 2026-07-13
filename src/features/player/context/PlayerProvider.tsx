@@ -10,8 +10,13 @@ type PlayerProviderProps = {
 
 const initialPlayerState: PlayerState = {
     isPlaying: false,
+
     currentTime: 0,
     duration: 0,
+
+    buffered: null,
+
+    isSeeking: false,
 };
 
 function PlayerProvider({ children }: PlayerProviderProps) {
@@ -37,12 +42,18 @@ function PlayerProvider({ children }: PlayerProviderProps) {
         }
     }
 
+    function seek(time: number): void {
+        if (!videoRef.current) return;
+
+        videoRef.current.currentTime = time;
+    }
+
     return (
         <PlayerContext.Provider
             value={{
                 refs: { videoRef },
                 state,
-                actions: { play, pause, toggle },
+                actions: { play, pause, toggle, seek },
                 dispatch,
             }}
         >

@@ -1,0 +1,12 @@
+.player-controls__wrapper {
+    width: 100%;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    bottom: 0;
+
+    .player-controls-buttons__container {
+        width: 100%;
+        display: flex;
+    }
+}

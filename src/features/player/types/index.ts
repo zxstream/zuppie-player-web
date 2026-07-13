@@ -2,14 +2,20 @@ import type { Dispatch, RefObject } from "react";
 
 export type PlayerState = {
     isPlaying: boolean;
+
     currentTime: number;
     duration: number;
+
+    buffered: TimeRanges | null;
+
+    isSeeking: boolean;
 };
 
 export type PlayerActions = {
     play(): void;
     pause(): void;
     toggle(): void;
+    seek(time: number): void;
 };
 
 export type PlayerDispatchAction =
