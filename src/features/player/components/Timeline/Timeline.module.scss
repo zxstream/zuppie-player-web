@@ -1,3 +1,5 @@
+@use "@styles/abstracts/mixins.scss" as mixins;
+
 .timeline__wrapper {
     position: relative;
 
@@ -7,15 +9,14 @@
     width: 100%;
     height: 1em;
 
-    overflow: hidden;
+    @include mixins.breakpoint("lg") {
+        &:hover .timeline__container {
+            height: 35%;
+        }
 
-    &:hover .timeline__container {
-        height: 50%;
-    }
-
-    &:hover .timeline__container .timeline__thumb {
-        width: 1em;
-        height: 1em;
+        &:hover .timeline__container .timeline__thumb {
+            @include mixins.size(1.15em);
+        }
     }
 
     .timeline__container {
@@ -26,7 +27,9 @@
 
         background: gray;
 
-        transition: 0.1s linear;
+        border-radius: 1000px;
+
+        transition: height 100ms linear;
 
         .timeline__progress {
             position: absolute;
@@ -36,9 +39,9 @@
             width: var(--player-progress, 0);
             height: 100%;
 
-            background-color: crimson;
+            border-radius: inherit;
 
-            transition: width 0.1s ease;
+            background-color: crimson;
         }
 
         .timeline__thumb {
@@ -47,8 +50,7 @@
             top: 50%;
             left: var(--player-progress, 0);
 
-            width: 0.75em;
-            height: 0.75em;
+            @include mixins.size(0.75em);
 
             border-radius: 50%;
 
@@ -57,9 +59,8 @@
             transform: translate(-50%, -50%);
 
             transition:
-                width,
-                height,
-                left 0.1s ease;
+                width 100ms linear,
+                height 100ms linear;
         }
     }
 }
