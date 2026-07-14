@@ -14,7 +14,7 @@ const initialPlayerState: PlayerState = {
     currentTime: 0,
     duration: 0,
 
-    buffered: null,
+    buffered: 0,
 
     isSeeking: false,
 };

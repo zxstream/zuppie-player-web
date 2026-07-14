@@ -27,6 +27,8 @@ function PlayerMedia({ source, poster }: PlayerMediaProps) {
             type: "DURATION_CHANGE",
             payload: videoRef.current.duration,
         });
+
+        handleProgress();
     }
 
     function handleTimeUpdate(): void {
@@ -35,6 +37,23 @@ function PlayerMedia({ source, poster }: PlayerMediaProps) {
         dispatch({
             type: "TIME_UPDATE",
             payload: videoRef.current.currentTime,
+        });
+    }
+
+    function handleProgress(): void {
+        if (!videoRef.current) {
+            return;
+        }
+
+        const { buffered } = videoRef.current;
+
+        if (buffered.length === 0) {
+            return;
+        }
+
+        dispatch({
+            type: "BUFFERED_CHANGE",
+            payload: buffered.end(buffered.length - 1),
         });
     }
 
@@ -50,6 +69,7 @@ function PlayerMedia({ source, poster }: PlayerMediaProps) {
                 onPause={handlePause}
                 onLoadedMetadata={handleLoadedMetadata}
                 onTimeUpdate={handleTimeUpdate}
+                onProgress={handleProgress}
             />
         </div>
     );

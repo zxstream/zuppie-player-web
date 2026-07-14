@@ -26,6 +26,12 @@ export function playerReducer(state: PlayerState, action: PlayerDispatchAction):
                 duration: action.payload,
             };
 
+        case "BUFFERED_CHANGE":
+            return {
+                ...state,
+                buffered: action.payload,
+            };
+            
         default:
             return state;
     }

@@ -9,10 +9,14 @@ function useTimeline() {
     const [dragTime, setDragTime] = useState<number | null>(null);
 
     const timelineRef = useRef<HTMLDivElement>(null);
+    const pointerIdRef = useRef<number | null>(null);
 
     const displayTime = dragTime ?? state.currentTime;
 
-    const progress = state.duration > 0 ? (displayTime / state.duration) * 100 : 0;
+    const progress = state.duration > 0 ? Math.min((displayTime / state.duration) * 100, 100) : 0;
+
+    const bufferedProgress =
+        state.duration > 0 ? Math.min((state.buffered / state.duration) * 100, 100) : 0;
 
     function getTimeFromClientX(clientX: number): number {
         if (!timelineRef.current) {
@@ -26,12 +30,12 @@ function useTimeline() {
         return percentage * state.duration;
     }
 
-    function startDragging(time: number): void {
+    function beginDrag(time: number): void {
         setIsDragging(true);
         setDragTime(time);
     }
 
-    function updateDragging(time: number): void {
+    function updateDrag(time: number): void {
         if (!isDragging) {
             return;
         }
@@ -39,25 +43,28 @@ function useTimeline() {
         setDragTime(time);
     }
 
-    function finishDragging(time: number): void {
-        actions.seek(time);
+    function commitDrag(time: number): void {
+        setDragTime(time);
 
-        setIsDragging(false);
+        actions.seek(time);
     }
 
-    function cancelDragging(): void {
+    function cleanupDrag(): void {
         setIsDragging(false);
         setDragTime(null);
+        pointerIdRef.current = null;
     }
 
     function handlePointerDown(event: React.PointerEvent<HTMLDivElement>): void {
+        pointerIdRef.current = event.pointerId;
+
         event.currentTarget.setPointerCapture(event.pointerId);
 
-        startDragging(getTimeFromClientX(event.clientX));
+        beginDrag(getTimeFromClientX(event.clientX));
     }
 
     function handlePointerMove(event: React.PointerEvent<HTMLDivElement>) {
-        updateDragging(getTimeFromClientX(event.clientX));
+        updateDrag(getTimeFromClientX(event.clientX));
     }
 
     function handlePointerUp() {
@@ -65,12 +72,19 @@ function useTimeline() {
             return;
         }
 
-        finishDragging(dragTime);
+        commitDrag(dragTime);
     }
 
     function handlePointerCancel(): void {
-        cancelDragging();
+        cleanupDrag();
     }
+
+    const timelineProps = {
+        onPointerDown: handlePointerDown,
+        // onPointerMove: handlePointerMove,
+        // onPointerUp: handlePointerUp,
+        // onPointerCancel: handlePointerCancel,
+    };
 
     useEffect(() => {
         if (dragTime === null) {
@@ -84,7 +98,7 @@ function useTimeline() {
 
     useEffect(() => {
         function handleWindowBlur() {
-            cancelDragging();
+            cleanupDrag();
         }
 
         window.addEventListener("blur", handleWindowBlur);
@@ -94,13 +108,57 @@ function useTimeline() {
         };
     }, []);
 
+    useEffect(() => {
+        if (!isDragging) {
+            return;
+        }
+
+        function handleWindowPointerMove(event: PointerEvent) {
+            console.info("move");
+            if (event.pointerId !== pointerIdRef.current) {
+                return;
+            }
+
+            updateDrag(getTimeFromClientX(event.clientX));
+        }
+
+        function handleWindowPointerUp(event: PointerEvent) {
+            console.info("up");
+            if (event.pointerId !== pointerIdRef.current) {
+                return;
+            }
+
+            commitDrag(getTimeFromClientX(event.clientX));
+
+            cleanupDrag();
+        }
+
+        function handleWindowPointerCancel(event: PointerEvent) {
+            console.log("cancel");
+        }
+
+        function handleLostPointerCapture() {
+            console.log("lost");
+        }
+
+        window.addEventListener("pointermove", handleWindowPointerMove);
+        window.addEventListener("pointerup", handleWindowPointerUp);
+        window.addEventListener("pointercancel", handleWindowPointerCancel);
+        window.addEventListener("lostpointercapture", handleLostPointerCapture);
+
+        return () => {
+            window.removeEventListener("pointermove", handleWindowPointerMove);
+            window.removeEventListener("pointerup", handleWindowPointerUp);
+            window.removeEventListener("pointercancel", handleWindowPointerCancel);
+            window.removeEventListener("lostpointercapture", handleLostPointerCapture);
+        };
+    }, [isDragging]);
+
     return {
         timelineRef,
         progress,
-        handlePointerDown,
-        handlePointerMove,
-        handlePointerUp,
-        handlePointerCancel,
+        bufferedProgress,
+        timelineProps,
     };
 }
 

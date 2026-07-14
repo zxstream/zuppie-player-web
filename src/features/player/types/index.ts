@@ -6,7 +6,7 @@ export type PlayerState = {
     currentTime: number;
     duration: number;
 
-    buffered: TimeRanges | null;
+    buffered: number;
 
     isSeeking: boolean;
 };
@@ -22,7 +22,8 @@ export type PlayerDispatchAction =
     | { type: "PLAY" }
     | { type: "PAUSE" }
     | { type: "TIME_UPDATE"; payload: number }
-    | { type: "DURATION_CHANGE"; payload: number };
+    | { type: "DURATION_CHANGE"; payload: number }
+    | { type: "BUFFERED_CHANGE"; payload: number };
 
 export type PlayerContextValue = {
     refs: {

@@ -7,14 +7,17 @@
     align-items: center;
 
     width: 100%;
-    height: 1em;
+    height: 2.5em;
+
+    touch-action: pan-y;
 
     @include mixins.breakpoint("lg") {
         &:hover .timeline__container {
+            height: 0.35em;
         }
 
         &:hover .timeline__container .timeline__thumb {
-            @include mixins.size(.75em);
+            @include mixins.size(1.25em);
         }
     }
 
@@ -29,6 +32,19 @@
         border-radius: 12em;
 
         transition: height 150ms ease-in-out;
+
+        .timeline__buffered {
+            position: absolute;
+
+            inset: 0 auto 0 0;
+
+            width: var(--player-buffered, 0);
+            height: 100%;
+
+            border-radius: inherit;
+
+            background: rgba(255, 255, 255, 0.25);
+        }
 
         .timeline__progress {
             position: absolute;
@@ -49,7 +65,7 @@
             top: 50%;
             left: var(--player-progress, 0);
 
-            @include mixins.size(0);
+            @include mixins.size(0.75em);
 
             border-radius: 50%;
 
