@@ -22,7 +22,7 @@
         "erasableSyntaxOnly": true,
         "noFallthroughCasesInSwitch": true,
 
-        /* Path Alias */
+        /* Paths */
         "paths": {
             "@/*": ["./src/*"],
             "@assets/*": ["./src/assets/*"],
